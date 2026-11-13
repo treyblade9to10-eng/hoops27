@@ -27,11 +27,11 @@ function loadGame() {
 const bar = document.getElementById('loadbar');
 function preload() {
   loadGame().then(m => {
-    if (!m.preloadGame) { bar.hidden = true; return; }
+    if (!m.preloadGame) { app.loadP = 1; bar.hidden = true; return; }
     bar.hidden = false;
-    return m.preloadGame(p => { bar.style.setProperty('--p', Math.max(0, Math.min(1, p))); })
-      .then(() => { bar.style.setProperty('--p', 1); bar.classList.add('done'); setTimeout(() => (bar.hidden = true), 700); });
-  }).catch(err => { console.warn('[hoops27] preload failed', err); bar.hidden = true; });
+    return m.preloadGame(p => { app.loadP = Math.max(0, Math.min(1, p)); bar.style.setProperty('--p', app.loadP); })
+      .then(() => { app.loadP = 1; bar.style.setProperty('--p', 1); bar.classList.add('done'); setTimeout(() => (bar.hidden = true), 700); });
+  }).catch(err => { console.warn('[hoops27] preload failed', err); app.loadP = 1; bar.hidden = true; });
 }
 
 // startGame contract: hide the menu, give the game #game, show the menu again when it resolves
