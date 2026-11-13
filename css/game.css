@@ -1,0 +1,111 @@
+/* In-game HUD: broadcast score bug, meters, banners, touch controls, pause + final screens */
+.h27-game-on { position: fixed; inset: 0; z-index: 50; background: #07080a; }
+.h27-wrap { position: absolute; inset: 0; overflow: hidden; user-select: none; -webkit-user-select: none; touch-action: none; font-family: "Barlow", system-ui, sans-serif; color: #fff; }
+.h27-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.h27-loading { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: #08090c; z-index: 5; }
+.h27-loading .ld-t { font: italic 900 28px "Barlow Condensed", sans-serif; letter-spacing: .12em; }
+.h27-loading .ld-bar { width: min(320px, 60vw); height: 4px; background: #23262d; }
+.h27-loading .ld-bar i { display: block; height: 100%; width: 0; background: #e0263a; transition: width .3s; }
+.h27-hud { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+
+/* score bug: bottom centre, team colour slabs */
+.bug { position: absolute; left: 50%; bottom: max(14px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: flex; align-items: stretch; height: 38px; background: rgba(10,11,14,.92); box-shadow: 0 6px 24px rgba(0,0,0,.45); clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%); }
+.bug-team { position: relative; display: flex; align-items: center; gap: 10px; padding: 0 14px 0 18px; min-width: 112px; background: linear-gradient(90deg, var(--tc) 0 7px, rgba(255,255,255,.04) 7px); }
+.bug-abbr { font: italic 800 19px "Barlow Condensed", sans-serif; letter-spacing: .06em; opacity: .92; }
+.bug-score { margin-left: auto; font: 800 26px "Barlow Condensed", sans-serif; min-width: 34px; text-align: right; }
+.bug-score.pop { animation: pop .45s ease-out; }
+@keyframes pop { 0% { transform: scale(1.5); color: #f2c230; } 100% { transform: none; } }
+.bug-fouls { position: absolute; left: 18px; bottom: 1px; font: 700 8px "Barlow", sans-serif; letter-spacing: .14em; color: #f2c230; }
+.bug-clock { display: flex; align-items: center; gap: 10px; padding: 0 14px; border-left: 1px solid rgba(255,255,255,.08); font: 800 19px "Barlow Condensed", sans-serif; }
+.bug-q { color: #f2c230; font-style: italic; }
+.bug-time { min-width: 46px; text-align: right; font-variant-numeric: tabular-nums; }
+.bug-shot { display: flex; align-items: center; justify-content: center; min-width: 40px; padding: 0 14px 0 10px; background: #e0263a; font: 800 20px "Barlow Condensed", sans-serif; font-variant-numeric: tabular-nums; }
+.bug-shot.low { animation: blink .5s steps(2) infinite; }
+@keyframes blink { 50% { background: #7a0f1b; } }
+
+/* play-by-play ticker */
+.pbp { position: absolute; left: max(14px, env(safe-area-inset-left)); top: 12px; display: flex; flex-direction: column; gap: 4px; max-width: min(46vw, 460px); }
+.pbp-line { font: 500 14px/1.25 "Barlow", sans-serif; background: rgba(8,9,12,.72); padding: 5px 10px 5px 12px; border-left: 3px solid #e0263a; animation: slin .3s ease-out; text-shadow: 0 1px 2px #000; }
+.pbp-line b { font-weight: 700; text-transform: uppercase; letter-spacing: .02em; }
+.pbp-line i { opacity: .75; font-style: normal; }
+.pbp-line.hot { border-left-color: #f2c230; }
+.pbp-line.dim { opacity: .7; border-left-color: #555; }
+.pbp-line.out { opacity: 0; transform: translateX(-20px); transition: .45s; }
+@keyframes slin { from { opacity: 0; transform: translateX(-24px); } }
+
+/* moment banner */
+.banner { position: absolute; left: 0; right: 0; top: 24%; display: flex; justify-content: center; opacity: 0; transform: scale(.9); transition: .25s; }
+.banner.on { opacity: 1; transform: none; }
+.banner-in { display: flex; flex-direction: column; align-items: center; padding: 6px 40px 8px; background: linear-gradient(90deg, transparent, rgba(8,9,12,.85) 18%, rgba(8,9,12,.85) 82%, transparent); }
+.banner .b1 { font: italic 900 clamp(34px, 7vw, 64px)/1 "Barlow Condensed", sans-serif; letter-spacing: .04em; text-shadow: 0 3px 0 rgba(0,0,0,.4); }
+.banner .b2 { font: 700 13px "Barlow", sans-serif; letter-spacing: .22em; opacity: .85; margin-top: 4px; }
+.banner.big .b1 { color: #f2c230; }
+.banner.green .b1 { color: #3ddc6c; }
+.banner.warn .b1 { color: #ff5a4e; }
+.banner.intro .b1 { font-size: clamp(30px, 6vw, 54px); }
+
+/* controlled player tag */
+.tag { position: absolute; left: 0; top: 0; margin: -34px 0 0 -60px; width: 120px; display: flex; flex-direction: column; align-items: center; opacity: 0; transition: opacity .2s; }
+.tag.on { opacity: 1; }
+.tag-name { font: italic 800 13px "Barlow Condensed", sans-serif; letter-spacing: .06em; background: rgba(8,9,12,.78); padding: 1px 7px; white-space: nowrap; text-shadow: 0 1px 1px #000; }
+.tag-stam { width: 54px; height: 4px; background: rgba(0,0,0,.6); margin-top: 3px; }
+.tag-stam i { display: block; height: 100%; background: #3ddc6c; transition: width .2s; }
+.tag-stam i.low { background: #ff7a2e; }
+
+/* shot meter */
+.meter { position: absolute; left: 0; top: 0; margin: -46px 0 0 0; display: flex; flex-direction: column; align-items: center; opacity: 0; transition: opacity .15s; }
+.meter.on { opacity: 1; }
+.meter-bar { position: relative; width: 12px; height: 84px; background: rgba(6,7,9,.8); border: 2px solid rgba(255,255,255,.85); }
+.meter-fill { position: absolute; left: 0; right: 0; bottom: 0; height: 0; background: #fff; }
+.meter-win { position: absolute; left: -5px; right: -5px; border-top: 2px solid #3ddc6c; border-bottom: 2px solid #3ddc6c; background: rgba(61,220,108,.25); }
+.meter.green .meter-fill { background: #3ddc6c; box-shadow: 0 0 14px #3ddc6c; }
+.meter.ok .meter-fill { background: #f2c230; }
+.meter.bad .meter-fill { background: #ff4b3e; }
+.meter-grade { margin-top: 5px; font: italic 800 12px "Barlow Condensed", sans-serif; letter-spacing: .08em; white-space: nowrap; text-shadow: 0 1px 2px #000; }
+.meter.green .meter-grade { color: #3ddc6c; }
+.meter.bad .meter-grade { color: #ff7a6e; }
+.ft-tip { position: absolute; left: 50%; bottom: 70px; transform: translateX(-50%); font: 700 12px "Barlow", sans-serif; letter-spacing: .2em; background: rgba(8,9,12,.8); padding: 6px 14px; opacity: 0; transition: .2s; }
+.ft-tip.on { opacity: 1; }
+
+.pause-btn { position: absolute; right: max(12px, env(safe-area-inset-right)); top: 10px; width: 40px; height: 40px; border: 0; background: rgba(8,9,12,.7); pointer-events: auto; display: grid; place-items: center; }
+.pause-btn svg { width: 18px; height: 18px; fill: #fff; }
+
+/* pause + final */
+.pause, .final { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(4,5,7,.72); pointer-events: auto; backdrop-filter: blur(3px); }
+.hide { display: none !important; }
+.pause-in { display: flex; flex-direction: column; gap: 6px; min-width: 300px; }
+.pause-title, .fin-title { font: italic 900 44px "Barlow Condensed", sans-serif; letter-spacing: .06em; margin-bottom: 8px; }
+.pi { display: flex; justify-content: space-between; align-items: center; gap: 30px; padding: 12px 18px; border: 0; background: rgba(22,24,30,.95); color: #fff; font: italic 800 20px "Barlow Condensed", sans-serif; letter-spacing: .06em; text-align: left; clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%); cursor: pointer; }
+.pi span { color: #f2c230; font-size: 16px; }
+.pi.sel, .pi:hover { background: #e0263a; }
+.pi.sel span, .pi:hover span { color: #fff; }
+.final-in { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.fin-row { display: flex; gap: 18px; }
+.fin-team { min-width: 210px; padding: 14px 20px; background: linear-gradient(180deg, var(--tc) 0 6px, rgba(18,20,26,.95) 6px); display: flex; flex-direction: column; align-items: center; }
+.fin-abbr { font: italic 800 22px "Barlow Condensed", sans-serif; letter-spacing: .08em; opacity: .9; }
+.fin-score { font: 900 64px/1 "Barlow Condensed", sans-serif; }
+.fin-top { margin-top: 8px; display: flex; flex-direction: column; align-items: center; font-size: 12px; letter-spacing: .08em; opacity: .9; }
+.fin-top b { font: italic 800 15px "Barlow Condensed", sans-serif; }
+.fin-go { margin-top: 10px; padding: 12px 40px; border: 0; background: #e0263a; color: #fff; font: italic 900 22px "Barlow Condensed", sans-serif; letter-spacing: .08em; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%); cursor: pointer; }
+
+/* touch controls */
+.h27-touch { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+.h27-touch .joy { position: absolute; left: 0; bottom: 0; width: 42%; height: 62%; pointer-events: auto; touch-action: none; }
+.joy-base, .joy-knob { position: absolute; left: 110px; top: 60%; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; }
+.joy-base { width: 112px; height: 112px; border: 2px solid rgba(255,255,255,.28); background: rgba(10,11,14,.25); }
+.joy-knob { width: 52px; height: 52px; background: rgba(255,255,255,.55); box-shadow: 0 2px 8px rgba(0,0,0,.4); }
+.joy:not(.on) .joy-base, .joy:not(.on) .joy-knob { opacity: .55; }
+.h27-touch .btns { position: absolute; right: max(10px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)); width: 232px; height: 200px; pointer-events: none; }
+.h27-touch button { position: absolute; width: 74px; height: 74px; border-radius: 50%; border: 2px solid rgba(255,255,255,.45); background: rgba(12,13,17,.55); color: #fff; font: italic 800 13px "Barlow Condensed", sans-serif; letter-spacing: .06em; pointer-events: auto; touch-action: none; -webkit-tap-highlight-color: transparent; }
+.h27-touch button.on { background: rgba(224,38,58,.75); border-color: #fff; transform: scale(.94); }
+.h27-touch .b-a { right: 4px; bottom: 6px; width: 92px; height: 92px; font-size: 16px; border-color: rgba(242,194,48,.85); }
+.h27-touch .b-b { right: 104px; bottom: 0; }
+.h27-touch .b-c { right: 92px; bottom: 82px; }
+.h27-touch .b-d { right: 10px; bottom: 108px; width: 64px; height: 64px; }
+.h27-touch .b-e { right: 168px; bottom: 74px; width: 60px; height: 60px; font-size: 12px; }
+.h27-touch.def .b-a { border-color: rgba(120,190,255,.85); }
+@media (max-height: 430px) {
+  .bug { height: 32px; bottom: 8px; } .bug-team { min-width: 92px; } .bug-score { font-size: 22px; } .bug-abbr { font-size: 16px; }
+  .pbp-line { font-size: 12px; padding: 3px 8px; } .pbp { max-width: 40vw; }
+  .h27-touch .btns { transform: scale(.86); transform-origin: right bottom; }
+}

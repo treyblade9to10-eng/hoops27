@@ -1,0 +1,36 @@
+HOOPS 27 sound credits
+======================
+Every sound effect in the game (ball bounce, swish, rim, backboard, buzzer, sneaker squeak, menu ticks, pack rip, card
+reveals) is synthesized live in js/audio.js with the Web Audio API. No samples are used for those.
+
+The three crowd files in this folder were copied from our own Bobble Bowl game. They were built from recordings that are
+public domain (CC0 1.0): https://creativecommons.org/publicdomain/zero/1.0/
+CC0 means no permission or credit is needed; the sources are listed anyway so anyone can check them.
+Freesound sounds were taken from their HQ preview files and cut, mixed, levelled and re-encoded to MP3.
+
+crowd_bed.mp3 (arena crowd wash loop)
+  "Crowd yelling huuuuu (60k persons) during a soccer game in Brazil" by felix.blume, CC0 - https://freesound.org/people/felix.blume/sounds/612131/
+  "noise#01.aif" (Feyenoord, De Kuip stadium, TV broadcast crowd mix) by huubjeroen, CC0 - https://freesound.org/people/huubjeroen/sounds/39733/
+  "CRWDReac-SOCCER_Millerntor Stadium Crowd Reaction General Ambience 01" by itmightgetloud, CC0 - https://freesound.org/people/itmightgetloud/sounds/829454/
+  "Milan Derby (Milan vs Inter) at San Siro Stadium" by neilraouf, CC0 - https://freesound.org/people/neilraouf/sounds/424354/
+
+crowd_hype.mp3 (excited roar loop)
+  "19 Football Crowd - Reaction To Goal.flac" by D.jones, CC0 - https://freesound.org/people/D.jones/sounds/528799/
+  "CRWDReac-SOCCER_Millerntor Stadium Crowd Reaction General Ambience 01" by itmightgetloud, CC0 (see above)
+
+crowd_fx.mp3 (one-shot reactions: cheers, ooh, claps, ref whistle)
+  cheers:  "19 Football Crowd - Reaction To Goal.flac" by D.jones, CC0 (see above)
+           "CRWDReac-SOCCER_Millerntor Stadium Crowd Reaction Excited 01" by itmightgetloud, CC0 - https://freesound.org/people/itmightgetloud/sounds/829453/
+  ooh:     "Crowd yelling huuuuu (60k persons) during a soccer game in Brazil" by felix.blume, CC0 (see above)
+  groan:   same felix.blume recording, plus "CRWDReac_Crowd Sigh In Disappointment_ShaneVincent_GSC24_FUMA-AmbeoVR.wav" by ShangusBurger, CC0 - https://freesound.org/people/ShangusBurger/sounds/764106/
+  boos:    "JM_AMB_INT_Crowd Sport 01 - Booing.wav" by Julien_Matthey, CC0 - https://freesound.org/people/Julien_Matthey/sounds/557189/
+           "CRWDAngr_Booing, Angry_ShaneVincent_GSC24_BIN-AmbeoVR.wav" by ShangusBurger, CC0 - https://freesound.org/people/ShangusBurger/sounds/763924/
+  claps:   "clapping group unisono" by Yuval, CC0 - https://freesound.org/people/Yuval/sounds/197435/
+  whistle: "Referee whistle blow, gymnasium.wav" by SpliceSound, CC0 - https://freesound.org/people/SpliceSound/sounds/218318/
+           "Referee whistle sound.wav" by Rosa-Orenes256, CC0 - https://freesound.org/people/Rosa-Orenes256/sounds/538422/
+  drum:    VSCO 2 CE concert bass drum by Versilian Studios, CC0 - https://github.com/sgossner/VSCO-2-CE
+
+File layout note: each file starts with a one-sample click followed by 0.25 s of silence (used to measure decoder delay).
+crowd_fx.mp3 sprite slots [start, length] in seconds after that marker:
+  cheerBig 0/8.15, cheer 8.21/4.8, cheer2 13.07/4.8, ooh 17.93/5, groan 22.99/3, boo 26.05/6, boo2 32.11/5.5,
+  clap1 37.67/0.324, clap2 38.054/0.324, clap3 38.438/0.324, whistle 38.822/1.4, whistle2 40.282/0.53, drum 40.872/1
